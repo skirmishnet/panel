@@ -72,11 +72,9 @@ class ServerTransformer extends Transformer
                 'backups' => $model->backup_limit,
                 'databases' => $model->database_limit,
             ],
-            // Skirmish start
-            "mounts" => [
-                'ids' => $model->mounts,
-            ],
-            // Skirmish end
+            // // Skirmish start
+            // 'mount' => $model->mounts, 
+            // // Skirmish end
             'owner_id' => $model->owner_id,
             'node_id' => $model->node_id,
             'allocation_id' => $model->allocation_id,
