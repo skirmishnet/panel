@@ -173,11 +173,11 @@ class ServerCreationService
     }
 
     // Skirmish Start
-     /**
-      * Fetch mounts for the server and load them on the server.
-      */
-     private function storeActiveMounts(Server $server, array $data): void
-     {
+    /**
+     * Fetch mounts for the server and load them on the server.
+     */
+    private function storeActiveMounts(Server $server, array $data): void
+    {
         // apply requested mounts, as well as those in db
         $mount_queries = [];
         if (isset($data['mount']) && is_array($data['mount'])) {
@@ -190,17 +190,17 @@ class ServerCreationService
             ->orWhereIn('id', $mount_queries)
             ->get();
 
-         foreach($mounts as $mount) {
-             $mountServer = (new MountServer())->forceFill([
-                 'mount_id' => $mount->id,
-                 'server_id' => $server->id,
-             ]);
+        foreach ($mounts as $mount) {
+            $mountServer = (new MountServer())->forceFill([
+                'mount_id' => $mount->id,
+                'server_id' => $server->id,
+            ]);
 
-             $mountServer->save();
-         }
-     }
-     // Skimish End
-    
+            $mountServer->save();
+        }
+    }
+    // Skimish End
+
     /**
      * Configure the allocations assigned to this server.
      */
