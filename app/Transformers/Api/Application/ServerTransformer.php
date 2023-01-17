@@ -26,7 +26,6 @@ class ServerTransformer extends Transformer
         'variables',
         'location',
         'node',
-        'databases',
         'transfer',
     ];
 
@@ -75,7 +74,7 @@ class ServerTransformer extends Transformer
             ],
             // Skirmish start
             "mounts" => [
-                'ids' => $model->mounts
+                'ids' => $model->mounts,
             ],
             // Skirmish end
             'owner_id' => $model->owner_id,

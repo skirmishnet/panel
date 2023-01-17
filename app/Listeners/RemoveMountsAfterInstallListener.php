@@ -5,15 +5,16 @@
  use Pterodactyl\Models\Mount;
  use Pterodactyl\Models\MountServer;
 
- class RemoveMountsAfterInstall
+ class RemoveMountsAfterInstallListener
  {
      /**
       * Handle the event.
       *
       * @param  object  $event
+      *
       * @return void
       */
-     public function handle($event)
+     public function handle($event): void
      {
          $mounts = Mount::where('mount_on_install', '=', true)->get();
          foreach ($mounts as $mount) {
