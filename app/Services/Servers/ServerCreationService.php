@@ -18,6 +18,8 @@ use Pterodactyl\Services\Deployment\FindViableNodesService;
 use Pterodactyl\Repositories\Eloquent\ServerVariableRepository;
 use Pterodactyl\Services\Deployment\AllocationSelectionService;
 use Pterodactyl\Exceptions\Http\Connection\DaemonConnectionException;
+use Pterodactyl\Models\Mount;
+use Pterodactyl\Models\MountServer;
 
 class ServerCreationService
 {
@@ -87,6 +89,7 @@ class ServerCreationService
             // Create the server and assign any additional allocations to it.
             $server = $this->createModel($data);
 
+            $this->storeActiveMounts($server);
             $this->storeAssignedAllocations($server, $data);
             $this->storeEggVariables($server, $eggVariableData);
 
@@ -167,6 +170,25 @@ class ServerCreationService
         return $model;
     }
 
+     /**
+      * Fetch mounts for the server and load them on the server.
+      */
+     private function storeActiveMounts(Server $server)
+     {
+         $mounts = Mount::where(function ($query) {
+             $query->where('mount_on_install', '=', true)
+                   ->orWhere('auto_mount', '=', true);
+         })->get();
+         foreach($mounts as $mount) {
+             $mountServer = (new MountServer())->forceFill([
+                 'mount_id' => $mount->id,
+                 'server_id' => $server->id,
+             ]);
+
+             $mountServer->save();
+         }
+     }
+    
     /**
      * Configure the allocations assigned to this server.
      */
