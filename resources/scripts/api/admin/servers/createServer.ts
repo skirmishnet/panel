@@ -30,7 +30,7 @@ export interface CreateServerRequest {
     };
 
     // Skirmish start
-    mount: number[],
+    mount: number[];
     // Skirmish end
 
     startup: string;

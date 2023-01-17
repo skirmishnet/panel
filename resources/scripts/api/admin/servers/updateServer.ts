@@ -23,7 +23,7 @@ export interface Values {
     };
 
     // Skirmish start
-    mount: number[]
+    mount: number[];
     // Skirmish end
 
     allocationId: number;
