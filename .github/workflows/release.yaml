@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - "v*"
+  workflow_call:
 
 jobs:
   release:
@@ -30,8 +31,8 @@ jobs:
           REF: ${{ github.ref }}
         run: |
           BRANCH=release/${REF:10}
-          git config --local user.email "ci@pterodactyl.io"
-          git config --local user.name "Pterodactyl CI"
+          git config --local user.email "ci@skirmish.io"
+          git config --local user.name "Skirmish CI"
           git checkout -b $BRANCH
           git push -u origin $BRANCH
           sed -i "s/    'version' => 'canary',/    'version' => '${REF:11}',/" config/app.php

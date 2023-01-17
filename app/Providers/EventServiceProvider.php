@@ -12,6 +12,7 @@ use Pterodactyl\Observers\SubuserObserver;
 use Pterodactyl\Observers\EggVariableObserver;
 use Pterodactyl\Listeners\Auth\AuthenticationListener;
 use Pterodactyl\Events\Server\Installed as ServerInstalledEvent;
+use Pterodactyl\Listeners\RemoveMountsAfterInstall;
 use Pterodactyl\Notifications\ServerInstalled as ServerInstalledNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -22,6 +23,7 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         ServerInstalledEvent::class => [ServerInstalledNotification::class],
+        RemoveMountsAfterInstall::class,
     ];
 
     protected $subscribe = [

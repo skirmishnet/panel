@@ -18,6 +18,8 @@ use Pterodactyl\Services\Deployment\FindViableNodesService;
 use Pterodactyl\Repositories\Eloquent\ServerVariableRepository;
 use Pterodactyl\Services\Deployment\AllocationSelectionService;
 use Pterodactyl\Exceptions\Http\Connection\DaemonConnectionException;
+use Pterodactyl\Models\Mount;
+use Pterodactyl\Models\MountServer;
 
 class ServerCreationService
 {
@@ -87,6 +89,9 @@ class ServerCreationService
             // Create the server and assign any additional allocations to it.
             $server = $this->createModel($data);
 
+            // Skirmish start
+            $this->storeActiveMounts($server, $data);
+            // Skirmish end
             $this->storeAssignedAllocations($server, $data);
             $this->storeEggVariables($server, $eggVariableData);
 
@@ -167,6 +172,36 @@ class ServerCreationService
         return $model;
     }
 
+    // Skirmish Start
+     /**
+      * Fetch mounts for the server and load them on the server.
+      */
+     private function storeActiveMounts(Server $server, array $data): void
+     {
+        // apply requested mounts, as well as those in db
+        $mount_queries = [];
+        if (isset($data['mount']) && is_array($data['mount'])) {
+            $mount_queries = array_merge($mount_queries, $data['mount']);
+        }
+
+        $mounts = Mount::where(function ($query) {
+             $query->where('mount_on_install', '=', true)
+                   ->orWhere('auto_mount', '=', true)
+                   ->orWhereIn('id', $mount_queries)
+         })->get();
+
+
+         foreach($mounts as $mount) {
+             $mountServer = (new MountServer())->forceFill([
+                 'mount_id' => $mount->id,
+                 'server_id' => $server->id,
+             ]);
+
+             $mountServer->save();
+         }
+     }
+     // Skimish End
+    
     /**
      * Configure the allocations assigned to this server.
      */
