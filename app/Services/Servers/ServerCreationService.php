@@ -89,7 +89,9 @@ class ServerCreationService
             // Create the server and assign any additional allocations to it.
             $server = $this->createModel($data);
 
+            // Skirmish start
             $this->storeActiveMounts($server);
+            // Skirmish end
             $this->storeAssignedAllocations($server, $data);
             $this->storeEggVariables($server, $eggVariableData);
 
@@ -173,7 +175,7 @@ class ServerCreationService
      /**
       * Fetch mounts for the server and load them on the server.
       */
-     private function storeActiveMounts(Server $server)
+     private function storeActiveMounts(Server $server): void
      {
          $mounts = Mount::where(function ($query) {
              $query->where('mount_on_install', '=', true)

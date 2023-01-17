@@ -29,6 +29,12 @@ export interface CreateServerRequest {
         additional: number[];
     };
 
+    // Skirmish start
+    mounts: {
+        ids: string[];
+    }
+    // Skirmish end
+
     startup: string;
     environment: Record<string, any>;
     eggId: number;
@@ -68,6 +74,12 @@ export default (r: CreateServerRequest, include: string[] = []): Promise<Server>
                     default: r.allocation.default,
                     additional: r.allocation.additional,
                 },
+
+                // Skirmish Start
+                mounts: {
+                    ids: r.mounts.ids
+                },
+                // Skirmish End
 
                 startup: r.startup,
                 environment: r.environment,

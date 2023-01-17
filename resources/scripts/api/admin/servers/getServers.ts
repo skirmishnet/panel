@@ -64,6 +64,12 @@ export interface Server {
         backups: number;
     };
 
+    // Skirmish start
+    mounts: {
+        ids: string[];
+    };
+    // Skirmish end
+
     ownerId: number;
     nodeId: number;
     allocationId: number;
@@ -114,6 +120,12 @@ export const rawDataToServer = ({ attributes }: FractalResponseData): Server =>
             backups: attributes.feature_limits.backups,
         },
 
+        // Skirmish start
+        mounts: {
+            ids: attributes.mounts.ids,
+        },
+        // Skirmish end
+        
         ownerId: attributes.owner_id,
         nodeId: attributes.node_id,
         allocationId: attributes.allocation_id,

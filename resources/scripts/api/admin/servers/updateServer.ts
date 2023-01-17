@@ -22,6 +22,12 @@ export interface Values {
         databases: number;
     };
 
+    // Skirmish start
+    mounts: {
+        ids: string[]
+    }
+    // Skirmish end
+
     allocationId: number;
     addAllocations: number[];
     removeAllocations: number[];
@@ -51,6 +57,12 @@ export default (id: number, server: Partial<Values>, include: string[] = []): Pr
                     backups: server.featureLimits?.backups,
                     databases: server.featureLimits?.databases,
                 },
+
+                // Skirmish Start
+                mounts: {
+                    ids: server.mounts?.ids,
+                },
+                // Skirmish End
 
                 allocation_id: server.allocationId,
                 add_allocations: server.addAllocations,
