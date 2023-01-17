@@ -72,9 +72,11 @@ class ServerTransformer extends Transformer
                 'backups' => $model->backup_limit,
                 'databases' => $model->database_limit,
             ],
-            // // Skirmish start
-            // 'mount' => $model->mounts, 
-            // // Skirmish end
+            // Skirmish start - not very useful + misleading but ye - ideally want to show the ids but idk php
+            'mount' => array_map(function($o) {
+                return $o['id'];
+            }, $model->mounts),
+            // Skirmish end
             'owner_id' => $model->owner_id,
             'node_id' => $model->node_id,
             'allocation_id' => $model->allocation_id,
