@@ -179,7 +179,7 @@ class ServerCreationService
      private function storeActiveMounts(Server $server, array $data): void
      {
         // apply requested mounts, as well as those in db
-        $mount_queries = [1];
+        $mount_queries = [];
         if (isset($data['mount']) && is_array($data['mount'])) {
             $mount_queries = array_merge($mount_queries, $data['mount']);
         }
