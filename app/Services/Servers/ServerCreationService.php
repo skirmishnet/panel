@@ -184,18 +184,11 @@ class ServerCreationService
             $mount_queries = array_merge($mount_queries, $data['mount']);
         }
 
-        // User::query()
-        ->where('id', 'LIKE', "$search%")
-        ->orWhere('username', 'LIKE', "$search%")
-        ->orWhere('email', 'LIKE', "$search%")
-        ->get();
-
         $mounts = Mount::query()
             ->where('mount_on_install', '=', true)
             ->orWhere('auto_mount', '=', true)
             ->orWhereIn('id', $mount_queries)
             ->get();
-
 
          foreach($mounts as $mount) {
              $mountServer = (new MountServer())->forceFill([
