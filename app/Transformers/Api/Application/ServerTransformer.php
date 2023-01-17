@@ -73,7 +73,7 @@ class ServerTransformer extends Transformer
                 'databases' => $model->database_limit,
             ],
             // Skirmish start - not very useful + misleading but ye - ideally want to show the ids but idk php
-            'mount' => array_map(function($o) {
+            'mount' => array_map(function ($o) {
                 return $o['id'];
             }, $model->mounts),
             // Skirmish end
