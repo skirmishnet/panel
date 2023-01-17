@@ -65,9 +65,7 @@ export interface Server {
     };
 
     // Skirmish start
-    mounts: {
-        ids: string[];
-    };
+    mount: number[]
     // Skirmish end
 
     ownerId: number;
@@ -121,9 +119,7 @@ export const rawDataToServer = ({ attributes }: FractalResponseData): Server =>
         },
 
         // Skirmish start
-        mounts: {
-            ids: attributes.mounts.ids,
-        },
+        mount: attributes.mount,
         // Skirmish end
         
         ownerId: attributes.owner_id,

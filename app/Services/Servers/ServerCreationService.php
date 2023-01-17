@@ -90,7 +90,7 @@ class ServerCreationService
             $server = $this->createModel($data);
 
             // Skirmish start
-            $this->storeActiveMounts($server);
+            $this->storeActiveMounts($server, $data);
             // Skirmish end
             $this->storeAssignedAllocations($server, $data);
             $this->storeEggVariables($server, $eggVariableData);
@@ -172,15 +172,25 @@ class ServerCreationService
         return $model;
     }
 
+    // Skirmish Start
      /**
       * Fetch mounts for the server and load them on the server.
       */
-     private function storeActiveMounts(Server $server): void
+     private function storeActiveMounts(Server $server, array $data): void
      {
-         $mounts = Mount::where(function ($query) {
+        // apply requested mounts, as well as those in db
+        $mount_queries = [1];
+        if (isset($data['mount']) && is_array($data['mount'])) {
+            $mount_queries = array_merge($mount_queries, $data['mount']);
+        }
+
+        $mounts = Mount::where(function ($query) {
              $query->where('mount_on_install', '=', true)
-                   ->orWhere('auto_mount', '=', true);
+                   ->orWhere('auto_mount', '=', true)
+                   ->orWhereIn('id', $mount_queries)
          })->get();
+
+
          foreach($mounts as $mount) {
              $mountServer = (new MountServer())->forceFill([
                  'mount_id' => $mount->id,
@@ -190,6 +200,7 @@ class ServerCreationService
              $mountServer->save();
          }
      }
+     // Skimish End
     
     /**
      * Configure the allocations assigned to this server.

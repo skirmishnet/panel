@@ -23,9 +23,7 @@ export interface Values {
     };
 
     // Skirmish start
-    mounts: {
-        ids: string[]
-    }
+    mount: number[]
     // Skirmish end
 
     allocationId: number;
@@ -59,9 +57,7 @@ export default (id: number, server: Partial<Values>, include: string[] = []): Pr
                 },
 
                 // Skirmish Start
-                mounts: {
-                    ids: server.mounts?.ids,
-                },
+                mount: server.mount,
                 // Skirmish End
 
                 allocation_id: server.allocationId,

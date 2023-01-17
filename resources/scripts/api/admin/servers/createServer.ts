@@ -30,9 +30,7 @@ export interface CreateServerRequest {
     };
 
     // Skirmish start
-    mounts: {
-        ids: string[];
-    }
+    mount: number[],
     // Skirmish end
 
     startup: string;
@@ -76,9 +74,7 @@ export default (r: CreateServerRequest, include: string[] = []): Promise<Server>
                 },
 
                 // Skirmish Start
-                mounts: {
-                    ids: r.mounts.ids
-                },
+                mount: r.mount,
                 // Skirmish End
 
                 startup: r.startup,
