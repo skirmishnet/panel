@@ -2,6 +2,7 @@
 
 namespace Pterodactyl\Tests\Integration\Api\Client\Server\Subuser;
 
+use Mockery;
 use Pterodactyl\Models\User;
 use Pterodactyl\Models\Subuser;
 use Pterodactyl\Repositories\Wings\DaemonServerRepository;
@@ -35,7 +36,7 @@ class SubuserAuthorizationTest extends ClientApiIntegrationTestCase
         Subuser::factory()->create(['server_id' => $server2->id, 'user_id' => $internal->id]);
         Subuser::factory()->create(['server_id' => $server3->id, 'user_id' => $internal->id]);
 
-        $this->instance(DaemonServerRepository::class, $mock = \Mockery::mock(DaemonServerRepository::class));
+        $this->instance(DaemonServerRepository::class, $mock = Mockery::mock(DaemonServerRepository::class));
         if ($method === 'DELETE') {
             $mock->expects('setServer->revokeUserJTI')->with($internal->id)->andReturnUndefined();
         }

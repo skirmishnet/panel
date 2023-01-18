@@ -25,7 +25,7 @@ export interface Server {
     };
     invocation: string;
     dockerImage: string;
-    description: string | null;
+    description: string;
     limits: {
         memory: number;
         swap: number;
@@ -34,6 +34,7 @@ export interface Server {
         cpu: number;
         threads: string;
     };
+    mount: number[]; // Skirmish
     eggFeatures: string[];
     featureLimits: {
         databases: number;
@@ -61,14 +62,15 @@ export const rawDataToServerObject = ({ attributes: data }: FractalResponseData)
     },
     description: data.description ? (data.description.length > 0 ? data.description : null) : null,
     limits: { ...data.limits },
+    mount: data.mount || [], // Skirmish 
     eggFeatures: data.egg_features || [],
     featureLimits: { ...data.feature_limits },
     isTransferring: data.is_transferring,
     variables: ((data.relationships?.variables as FractalResponseList | undefined)?.data || []).map(
-        rawDataToServerEggVariable,
+        rawDataToServerEggVariable
     ),
     allocations: ((data.relationships?.allocations as FractalResponseList | undefined)?.data || []).map(
-        rawDataToServerAllocation,
+        rawDataToServerAllocation
     ),
 });
 
@@ -80,7 +82,7 @@ export default (uuid: string): Promise<[Server, string[]]> => {
                     rawDataToServerObject(data),
                     // eslint-disable-next-line camelcase
                     data.meta?.is_server_owner ? ['*'] : data.meta?.user_permissions || [],
-                ]),
+                ])
             )
             .catch(reject);
     });
