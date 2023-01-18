@@ -2,6 +2,7 @@
 
 namespace Pterodactyl\Tests\Integration\Api\Client\Server;
 
+use Mockery;
 use Illuminate\Http\Response;
 use Pterodactyl\Models\Permission;
 use Pterodactyl\Repositories\Wings\DaemonPowerRepository;
@@ -50,13 +51,13 @@ class PowerControllerTest extends ClientApiIntegrationTestCase
      */
     public function testActionCanBeSentToServer(string $action, string $permission)
     {
-        $service = \Mockery::mock(DaemonPowerRepository::class);
+        $service = Mockery::mock(DaemonPowerRepository::class);
         $this->app->instance(DaemonPowerRepository::class, $service);
 
         [$user, $server] = $this->generateTestAccount([$permission]);
 
         $service->expects('setServer')
-            ->with(\Mockery::on(function ($value) use ($server) {
+            ->with(Mockery::on(function ($value) use ($server) {
                 return $server->uuid === $value->uuid;
             }))
             ->andReturnSelf()

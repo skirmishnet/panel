@@ -2,8 +2,10 @@
 
 namespace Pterodactyl\Tests\Integration\Services\Databases;
 
+use Mockery;
 use Mockery\MockInterface;
 use Pterodactyl\Models\Node;
+use InvalidArgumentException;
 use Pterodactyl\Models\Database;
 use Pterodactyl\Models\DatabaseHost;
 use Pterodactyl\Tests\Integration\IntegrationTestCase;
@@ -22,7 +24,7 @@ class DeployServerDatabaseServiceTest extends IntegrationTestCase
     {
         parent::setUp();
 
-        $this->managementService = \Mockery::mock(DatabaseManagementService::class);
+        $this->managementService = Mockery::mock(DatabaseManagementService::class);
         $this->swap(DatabaseManagementService::class, $this->managementService);
     }
 
@@ -48,7 +50,7 @@ class DeployServerDatabaseServiceTest extends IntegrationTestCase
     {
         $server = $this->createServerModel();
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageMatches('/^Expected a non-empty value\. Got: /');
         $this->getService()->handle($server, $data);
     }
@@ -61,8 +63,8 @@ class DeployServerDatabaseServiceTest extends IntegrationTestCase
     {
         $server = $this->createServerModel();
 
-        $host = DatabaseHost::factory()->create();
-        $node = Node::factory()->create(['database_host_id' => $host->id, 'location_id' => $server->location->id]);
+        $node = Node::factory()->create(['location_id' => $server->location->id]);
+        DatabaseHost::factory()->create(['node_id' => $node->id]);
 
         config()->set('pterodactyl.client_features.databases.allow_random', false);
 
@@ -96,13 +98,12 @@ class DeployServerDatabaseServiceTest extends IntegrationTestCase
     {
         $server = $this->createServerModel();
 
-        $host1 = DatabaseHost::factory()->create();
-        $host2 = DatabaseHost::factory()->create();
-        $node = Node::factory()->create(['database_host_id' => $host2->id, 'location_id' => $server->location->id]);
-        $server->node->database_host_id = $host2->id;
+        $node = Node::factory()->create(['location_id' => $server->location->id]);
+        DatabaseHost::factory()->create(['node_id' => $node->id]);
+        $host = DatabaseHost::factory()->create(['node_id' => $server->node_id]);
 
         $this->managementService->expects('create')->with($server, [
-            'database_host_id' => $host2->id,
+            'database_host_id' => $host->id,
             'database' => "s{$server->id}_something",
             'remote' => '%',
         ])->andReturns(new Database());
@@ -124,8 +125,8 @@ class DeployServerDatabaseServiceTest extends IntegrationTestCase
     {
         $server = $this->createServerModel();
 
-        $host = DatabaseHost::factory()->create();
-        $node = Node::factory()->create(['location_id' => $server->location->id, 'database_host_id' => $host->id]);
+        $node = Node::factory()->create(['location_id' => $server->location->id]);
+        $host = DatabaseHost::factory()->create(['node_id' => $node->id]);
 
         $this->managementService->expects('create')->with($server, [
             'database_host_id' => $host->id,
