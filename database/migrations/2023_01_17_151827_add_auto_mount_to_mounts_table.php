@@ -4,8 +4,8 @@
  use Illuminate\Database\Schema\Blueprint;
  use Illuminate\Database\Migrations\Migration;
 
-class AddAutoMountToMountsTable extends Migration
-{
+ class AddAutoMountToMountsTable extends Migration
+ {
     /**
      * Run the mount migrations.
      *
@@ -30,4 +30,4 @@ class AddAutoMountToMountsTable extends Migration
             // todo xd
         });
     }
-}
+ }
